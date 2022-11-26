@@ -22,6 +22,7 @@ class User(AbstractUser):
     id_company = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(null=True)
 
     def __str__(self):
         return self.username
@@ -31,10 +32,23 @@ class User(AbstractUser):
 
 
 class Shift(models.Model):
-    pass
+    id = models.IntegerField(auto_created=True,primary_key=True)
+    name = models.CharField(verbose_name='name',max_length=255)
+    start_time = models.TimeField(verbose_name='starttime')
+    end_time = models.TimeField(verbose_name='endtime')
 
-class ShiftStatus(models.Model):
-    pass
+    def __str__(self) -> str:
+        return "%s %s" % (self.starttime,self.endtime)
+    class Meta: 
+        db_table = 'shift'
+
 
 class Schedule(models.Model):
-    pass
+    id = models.IntegerField(auto_created=True,primary_key=True)
+    name = models.CharField(verbose_name='name',max_length=255)
+    date = models.DateField(verbose_name='date')
+    shiftid = models.ForeignKey(Shift,on_delete=models.CASCADE)
+    userid = models.ForeignKey(User,on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'schedule'
