@@ -22,7 +22,8 @@ class User(AbstractUser):
     id_company = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(null=True)
+    is_admin = models.BooleanField(default=True)
+    is_unknown = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
@@ -32,23 +33,39 @@ class User(AbstractUser):
 
 
 class Shift(models.Model):
-    id = models.IntegerField(auto_created=True,primary_key=True)
-    name = models.CharField(verbose_name='name',max_length=255)
-    start_time = models.TimeField(verbose_name='starttime')
-    end_time = models.TimeField(verbose_name='endtime')
+    name = models.CharField(max_length=50)
+    start_time = models.TimeField(default=True)
+    end_time = models.TimeField(default=True)
+    status = models.BooleanField(default=True)
+    date = models.DateField(default=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=True)
 
     def __str__(self) -> str:
-        return "%s %s" % (self.starttime,self.endtime)
+        return "%s %s" % (self.start_time,self.end_time)
     class Meta: 
         db_table = 'shift'
-
-
-class Schedule(models.Model):
-    id = models.IntegerField(auto_created=True,primary_key=True)
-    name = models.CharField(verbose_name='name',max_length=255)
-    date = models.DateField(verbose_name='date')
-    shiftid = models.ForeignKey(Shift,on_delete=models.CASCADE)
-    userid = models.ForeignKey(User,on_delete=models.CASCADE)
+    
+class Camera(models.Model):
+    name = models.CharField(max_length=50)
+    url = models.CharField(max_length=100)
 
     class Meta:
-        db_table = 'schedule'
+        db_table = 'camera'
+
+class Face(models.Model):
+    name = models.CharField(max_length=50)
+    feature = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'face'
+
+
+class Log(models.Model):
+    time_in = models.TimeField()
+    date = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    camera = models.ForeignKey(Face, on_delete=models.PROTECT)
+
+    class Meta:
+        db_table = 'log'

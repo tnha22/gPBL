@@ -15,7 +15,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.api.models import User
 from apps.api.serializers import UserSerializer, RegisterSerializer, LoginSerializer
 
-
 # Class based view to Get User Details using Token Authentication
 class UserDetailAPI(APIView):
 
@@ -66,6 +65,8 @@ class LoginUserView(APIView):
             'error_code': 400
         }, status=status.HTTP_400_BAD_REQUEST)
 
+# blog/views.py
+
 
 
 
@@ -75,7 +76,7 @@ class LoginUserView(APIView):
 '''
 class UserRegisterView(APIView):
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
             user = serializer.save()

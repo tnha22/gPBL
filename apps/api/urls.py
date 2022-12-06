@@ -7,4 +7,5 @@ urlpatterns = [
     path("api/get-details", UserDetailAPI.as_view(), name='get-details'),
     path('api/login', LoginUserView.as_view(), name='login user'),
     path('api/register', RegisterUserAPIView.as_view(), name='register user'),
+
 ]

@@ -49,7 +49,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             age=validated_data['age'],
             address=validated_data['address'],
             phone_number=validated_data['phone_number'],
-            id_company=validated_data['id_company']
+            id_company=validated_data['id_company'],
         )
 
         user.set_password(validated_data['password'])
