@@ -14,7 +14,7 @@ urlpatterns = [
     # path("", include("apps.authentication.urls")), # Auth routes - login / register
 
     # ADD NEW Routes 
-    path("", include("apps.api.urls")),
+    path("api/", include("apps.api.urls")),
     # path('persons', include(router.urls)),
 
     # Leave `Home.Urls` as last the last line

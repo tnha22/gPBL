@@ -1,6 +1,8 @@
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import datetime
+import django.utils
 
 # Create your models here.
 
@@ -22,8 +24,9 @@ class User(AbstractUser):
     id_company = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_admin = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
     is_unknown = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='faces')
 
     def __str__(self):
         return self.username
@@ -33,12 +36,12 @@ class User(AbstractUser):
 
 
 class Shift(models.Model):
-    name = models.CharField(max_length=50)
-    start_time = models.TimeField(default=True)
-    end_time = models.TimeField(default=True)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     status = models.BooleanField(default=True)
-    date = models.DateField(default=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=True)
+    date = models.DateField(default=django.utils.timezone.now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return "%s %s" % (self.start_time,self.end_time)
@@ -55,17 +58,16 @@ class Camera(models.Model):
 class Face(models.Model):
     name = models.CharField(max_length=50)
     feature = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
 
     class Meta:
         db_table = 'face'
 
 
 class Log(models.Model):
-    time_in = models.TimeField()
-    date = models.DateField()
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    camera = models.ForeignKey(Face, on_delete=models.PROTECT)
+    time_in = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, models.CASCADE)
+    camera = models.ForeignKey(Camera, models.CASCADE)
 
     class Meta:
         db_table = 'log'
